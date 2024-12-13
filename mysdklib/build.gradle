@@ -1,0 +1,82 @@
+plugins {
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.maven.publish)
+}
+
+android {
+    namespace 'com.adroit.mysdklib'
+    compileSdk 34
+
+    defaultConfig {
+        applicationId "com.adroit.mysdklib"
+        minSdk 24
+        targetSdk 34
+        versionCode 1
+        versionName "1.0"
+
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_11
+        targetCompatibility JavaVersion.VERSION_11
+    }
+}
+
+dependencies {
+
+    implementation libs.appcompat
+    implementation libs.material
+    testImplementation libs.junit
+    androidTestImplementation libs.ext.junit
+    androidTestImplementation libs.espresso.core
+}
+
+// Maven publishing configuration
+publishing {
+    publications {
+        release(MavenPublication) {
+            groupId = 'com.adroit' // Custom group ID
+            artifactId = 'custom-sdk'     // Custom artifact ID
+            version = '1.0.0'            // Library version
+
+            // Publish the AAR file
+            afterEvaluate {
+                artifact("$buildDir/outputs/aar/${project.name}-release.aar")
+            }
+
+            pom {
+                name = 'Custom SDK Library'
+                description = 'An example SDK with custom module name and artifact'
+                url = 'https://github.com/yourusername/CustomSdkLibrary'
+
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id = 'yourusername'
+                        name = 'Your Name'
+                        email = 'your.email@example.com'
+                    }
+                }
+
+                scm {
+                    connection = 'scm:git:git://github.com/yourusername/CustomSdkLibrary.git'
+                    developerConnection = 'scm:git:ssh://github.com/yourusername/CustomSdkLibrary.git'
+                    url = 'https://github.com/yourusername/CustomSdkLibrary'
+                }
+            }
+        }
+    }
+}

@@ -45,7 +45,6 @@ publishing {
             groupId = 'com.adroit' // Custom group ID
             artifactId = 'custom-sdk'     // Custom artifact ID
             version = '1.0.0'            // Library version
-
             // Publish the AAR file
             afterEvaluate {
                 artifact("$buildDir/outputs/aar/${project.name}-release.aar")

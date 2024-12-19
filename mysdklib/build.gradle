@@ -1,6 +1,6 @@
 plugins {
-    alias(libs.plugins.android.application)
     alias(libs.plugins.maven.publish)
+    alias(libs.plugins.android.library)
 }
 
 android {
@@ -26,6 +26,12 @@ android {
         sourceCompatibility JavaVersion.VERSION_17
         targetCompatibility JavaVersion.VERSION_17
     }
+    publishing {
+        singleVariant("release") {
+            withSourcesJar()
+            withJavadocJar()
+        }
+    }
 }
 
 dependencies {
@@ -41,25 +47,26 @@ dependencies {
 publishing {
     publications {
         release(MavenPublication) {
-            groupId = 'com.adroit' // Custom group ID
-            artifactId = 'custom-sdk'     // Custom artifact ID
-            version = '1.0.0'            // Library version
-            // Publish the AAR file
+            // Include the AAR artifact
             afterEvaluate {
-                artifact("$buildDir/outputs/aar/${project.name}-release.aar")
+                from components["release"]
             }
 
+            groupId = 'com.adroit.mysdklib'   // Replace with your custom group ID
+            artifactId = 'mysdklib'           // Replace with your library's artifact ID
+            version = '1.0.0'                 // Replace with your desired version
+
             pom {
-                name = 'Custom SDK Library'
-                description = 'An example SDK with custom module name and artifact'
+                name = 'My SDK Library'
+                description = 'An Android library for my SDK.'
                 url = 'https://github.com/rajukaranam/sdk'
+
                 licenses {
                     license {
                         name = 'The Apache License, Version 2.0'
-                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0'
                     }
                 }
-
                 developers {
                     developer {
                         id = 'rajukaranam'
@@ -67,7 +74,6 @@ publishing {
                         email = 'karanam.braju@gmail.com'
                     }
                 }
-
                 scm {
                     connection = 'scm:git:git://github.com/rajukaranam/sdk.git'
                     developerConnection = 'scm:git:ssh://github.com/rajukaranam/sdk.git'
